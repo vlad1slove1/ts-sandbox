@@ -1,0 +1,24 @@
+{
+  "name": "ts-practice",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "run": "tsx",
+    "r": "tsx",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json}\"",
+    "lint": "eslint \"src/**/*.{ts,tsx,js,jsx}\"",
+    "lint:fix": "eslint \"src/**/*.{ts,tsx,js,jsx}\" --fix"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.8.0",
+    "@types/node": "^25.3.3",
+    "eslint": "^9.8.0",
+    "eslint-config-prettier": "^10.0.0",
+    "prettier": "~3.6.2",
+    "tsx": "^4.7.0",
+    "typescript": "~5.9.2",
+    "typescript-eslint": "^8.40.0"
+  }
+}

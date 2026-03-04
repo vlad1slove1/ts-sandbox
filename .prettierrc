@@ -1,0 +1,21 @@
+{
+    "trailingComma": "es5",
+    "tabWidth": 4,
+    "singleQuote": true,
+    "arrowParens": "always",
+    "bracketSpacing": true,
+    "useTabs": false,
+    "bracketSameLine": false,
+    "printWidth": 100,
+    "quoteProps": "consistent",
+    "semi": true,
+    "endOfLine": "lf",
+    "overrides": [
+        {
+            "files": "*.ts",
+            "options": {
+                "parser": "typescript"
+            }
+        }
+    ]
+}
