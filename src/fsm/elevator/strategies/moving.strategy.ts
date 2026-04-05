@@ -11,7 +11,7 @@ export class MovingStrategy implements ElevatorStateStrategy {
         switch (event) {
             case ElevatorEvent.RequestFloor: {
                 const targetFloor = payload?.targetFloor;
-                if (!targetFloor) {
+                if (targetFloor === undefined) {
                     return ElevatorSignal.Error;
                 }
 
@@ -30,13 +30,13 @@ export class MovingStrategy implements ElevatorStateStrategy {
                 }
 
                 if (elevator.hasArrived()) {
-                    elevator.useNextItemFromQueue();
+                    elevator.onArrivedAtDestination();
                     return ElevatorSignal.Ok;
                 }
 
                 elevator.moveOneFloor();
                 if (elevator.hasArrived()) {
-                    elevator.useNextItemFromQueue();
+                    elevator.onArrivedAtDestination();
                 }
 
                 return ElevatorSignal.Ok;

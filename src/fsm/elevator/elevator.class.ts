@@ -8,16 +8,15 @@ export class Elevator {
     private strategies: ElevatorStrategies;
     private state: ElevatorState;
 
+    private readonly MAX_SIMULATION_STEPS: number = 100;
+    private readonly FLOOR_TRAVEL_DELAY_MS: number = 1_000;
+
     constructor(config: ElevatorConfig) {
         this.state = config.initialState;
         this.currentFloor = config.currentFloor;
         this.destinationFloor = null;
         this.floorQueue = [];
         this.strategies = config.strategies;
-    }
-
-    transit(targetFloor: Floor): ElevatorSignal {
-        return this.dispatch(ElevatorEvent.RequestFloor, { targetFloor });
     }
 
     getCurrentFloor(): Floor {
@@ -36,6 +35,10 @@ export class Elevator {
 
     addFloorToQueue(floor: Floor): void {
         if (this.destinationFloor !== null && floor === this.destinationFloor) {
+            return;
+        }
+
+        if (this.floorQueue.includes(floor)) {
             return;
         }
 
@@ -65,18 +68,14 @@ export class Elevator {
         console.log(`At floor ${this.currentFloor}`);
     }
 
-    useNextItemFromQueue(): void {
-        const nextDestination = this.floorQueue.shift();
+    openDoorsAtCurrentFloor(): void {
+        this.changeStateTo(ElevatorState.IdleDoorOpen);
+        console.log(`Doors opening at floor ${this.currentFloor}`);
+    }
 
-        if (nextDestination !== undefined) {
-            this.destinationFloor = nextDestination;
-            console.log(`Arrived; next floor is: ${nextDestination}`);
-            return;
-        }
-
+    onArrivedAtDestination(): void {
         this.destinationFloor = null;
-        this.changeStateTo(ElevatorState.IdleDoorClosed);
-        console.log('Arrived');
+        this.openDoorsAtCurrentFloor();
     }
 
     removeFloorFromQueue(): Floor | undefined {
@@ -87,6 +86,13 @@ export class Elevator {
         this.state = next;
     }
 
+    async transit(targetFloor: Floor): Promise<ElevatorSignal> {
+        const signal: ElevatorSignal = this.dispatch(ElevatorEvent.RequestFloor, { targetFloor });
+        await this.simulateTransition();
+
+        return signal;
+    }
+
     private dispatch(event: ElevatorEvent, payload?: { targetFloor?: Floor }): ElevatorSignal {
         const strategy = this.strategies.get(this.state);
 
@@ -95,5 +101,36 @@ export class Elevator {
         }
 
         return strategy.handle(this, event, payload);
+    }
+
+    private delayOneFloor(): Promise<void> {
+        if (this.FLOOR_TRAVEL_DELAY_MS <= 0) {
+            return Promise.resolve();
+        }
+
+        return new Promise<void>((resolve: () => void) => {
+            setTimeout(resolve, this.FLOOR_TRAVEL_DELAY_MS);
+        });
+    }
+
+    private async simulateTransition(): Promise<void> {
+        let steps: number = 0;
+
+        while (steps < this.MAX_SIMULATION_STEPS) {
+            steps = steps + 1;
+
+            if (this.state === ElevatorState.Moving) {
+                await this.delayOneFloor();
+                this.dispatch(ElevatorEvent.MovedOneFloor);
+                continue;
+            }
+
+            if (this.state === ElevatorState.IdleDoorOpen) {
+                this.dispatch(ElevatorEvent.DoorsFullyClosed);
+                continue;
+            }
+
+            break;
+        }
     }
 }

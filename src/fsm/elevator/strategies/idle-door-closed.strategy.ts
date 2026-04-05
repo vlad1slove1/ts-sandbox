@@ -17,6 +17,7 @@ export class IdleDoorClosedStrategy implements ElevatorStateStrategy {
                 }
 
                 if (targetFloor === elevator.getCurrentFloor()) {
+                    elevator.openDoorsAtCurrentFloor();
                     return ElevatorSignal.Ok;
                 }
 

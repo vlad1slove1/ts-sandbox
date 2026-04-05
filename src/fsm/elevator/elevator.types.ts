@@ -7,6 +7,7 @@ export interface ElevatorConfig {
     initialState: ElevatorState;
     currentFloor: Floor;
     strategies: ElevatorStrategies;
+    floorTravelDelayMs?: number;
 }
 
 export interface ElevatorStateStrategy {

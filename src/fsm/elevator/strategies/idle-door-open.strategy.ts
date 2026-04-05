@@ -12,7 +12,7 @@ export class IdleDoorOpenStrategy implements ElevatorStateStrategy {
             case ElevatorEvent.RequestFloor: {
                 const targetFloor = payload?.targetFloor;
 
-                if (!targetFloor) {
+                if (targetFloor === undefined) {
                     return ElevatorSignal.Error;
                 }
 

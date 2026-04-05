@@ -28,18 +28,25 @@ const elevator: Elevator = new Elevator({
     strategies,
 });
 
-function run(): void {
-    rl.question('Этаж (1-9): ', (answer) => {
-        const targetFloor: number = parseInt(answer.trim(), 10);
+async function handleFloorInput(answer: string): Promise<void> {
+    const targetFloor: number = parseInt(answer.trim(), 10);
 
-        if (isNaN(targetFloor) || targetFloor < 1 || targetFloor > 9) {
-            console.error('Ошибка: введите число от 1 до 9');
-            run();
-            return;
-        }
-
-        elevator.transit(targetFloor as Floor);
+    if (isNaN(targetFloor) || targetFloor < 1 || targetFloor > 9) {
+        console.error('Ошибка: введите число от 1 до 9');
         run();
+        return;
+    }
+
+    await elevator.transit(targetFloor as Floor);
+    run();
+}
+
+function run(): void {
+    rl.question('Этаж (1-9): ', (answer: string) => {
+        handleFloorInput(answer).catch((err: unknown) => {
+            console.error(err);
+            run();
+        });
     });
 }
 
