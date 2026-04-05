@@ -1,7 +1,7 @@
 import { createInterface } from 'readline';
 import { Elevator } from './elevator.class.js';
 import { ElevatorState, Floor } from './elevator.enums.js';
-import { ElevatorStateStrategy, ElevatorStrategies } from './elevator.types.js';
+import { ElevatorStrategies } from './elevator.types.js';
 import {
     IdleDoorClosedStrategy,
     IdleDoorOpenStrategy,
@@ -14,13 +14,13 @@ const idleDoorClosedStrategy = new IdleDoorClosedStrategy();
 const idleDoorOpenStrategy = new IdleDoorOpenStrategy();
 const movingStrategy = new MovingStrategy();
 
-const strategies: ElevatorStrategies = new Map<ElevatorState, ElevatorStateStrategy>([
-    [ElevatorState.CallButtonPressed, idleDoorClosedStrategy],
-    [ElevatorState.IdleDoorOpen, idleDoorOpenStrategy],
-    [ElevatorState.IdleDoorClosed, idleDoorClosedStrategy],
-    [ElevatorState.FloorButtonPressed, idleDoorClosedStrategy],
-    [ElevatorState.Moving, movingStrategy],
-]);
+const strategies: ElevatorStrategies = {
+    [ElevatorState.CallButtonPressed]: idleDoorClosedStrategy,
+    [ElevatorState.IdleDoorOpen]: idleDoorOpenStrategy,
+    [ElevatorState.IdleDoorClosed]: idleDoorClosedStrategy,
+    [ElevatorState.FloorButtonPressed]: idleDoorClosedStrategy,
+    [ElevatorState.Moving]: movingStrategy,
+};
 
 const elevator: Elevator = new Elevator({
     initialState: ElevatorState.IdleDoorClosed,

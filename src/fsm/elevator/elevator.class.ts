@@ -94,7 +94,7 @@ export class Elevator {
     }
 
     private dispatch(event: ElevatorEvent, payload?: { targetFloor?: Floor }): ElevatorSignal {
-        const strategy = this.strategies.get(this.state);
+        const strategy = this.strategies[this.state];
 
         if (!strategy) {
             throw new Error(`No strategy registered for state ${ElevatorState[this.state]}`);

@@ -1,7 +1,7 @@
 import { Elevator } from './elevator.class.js';
 import { ElevatorEvent, ElevatorSignal, ElevatorState, Floor } from './elevator.enums.js';
 
-export type ElevatorStrategies = Map<ElevatorState, ElevatorStateStrategy>;
+export type ElevatorStrategies = Record<ElevatorState, ElevatorStateStrategy>;
 
 export interface ElevatorConfig {
     initialState: ElevatorState;
