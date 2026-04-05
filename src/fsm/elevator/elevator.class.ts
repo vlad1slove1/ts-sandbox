@@ -1,6 +1,7 @@
 import { ElevatorEvent, ElevatorSignal, ElevatorState, Floor } from './elevator.enums.js';
 import { ElevatorConfig, ElevatorStrategies } from './elevator.types.js';
 
+// todo: дописать выбор нескольких этажей (алгоритм SCAN)
 export class Elevator {
     private currentFloor: Floor;
     private destinationFloor: Floor | null;
@@ -46,6 +47,7 @@ export class Elevator {
         console.log(`Queued floor ${floor}`);
     }
 
+    // todo: заменить! это не fsm!
     isMoving(): boolean {
         return this.destinationFloor !== null;
     }
